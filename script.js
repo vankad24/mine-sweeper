@@ -38,7 +38,7 @@ function left_click(e){
 		let v = game_field[index]
 		if (first_click){
 			first_click = false
-			while(v>=10){
+			while(v!=0){
 				generateField()
 				v = game_field[index]
 			}
@@ -100,8 +100,8 @@ function generateField(){
 
 function clear_field(){
 	for (let el of all_elements){
+		el.classList=""
 		el.classList.add("closed_cell")
-		el.classList.remove("opened_cell")
 		el.innerText = ""
 	}
 }
@@ -144,17 +144,35 @@ function playSound(name) {
 function win(){
 	playSound("win")
 	open_all()
-	setTimeout(()=>{
-		alert("Вы выиграли!")
-	},500)	
+	// setTimeout(()=>{
+		// alert("Вы выиграли!")
+	// },500)
+}
+
+function shuffle(arr) {
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]]
+	}
 }
 
 function lose(){
-	playSound("lose")
-	open_all()
-	setTimeout(()=>{
-		alert("Вы проиграли!")
-	},500)
+	let bombs = []
+	for (let i=0;i<game_field.length;i++){
+		if (game_field[i]>9)bombs.push(all_elements[i])
+	}
+	shuffle(bombs)
+	for (let i=0;i<bombs.length;i++){
+		setTimeout(()=>{
+			if (i===bombs.length-1)open_all()
+			if (i%3==0)playSound("lose")
+			open_cell(bombs[i],10)
+			bombs[i].classList.add("bomb")
+			setTimeout(()=>{
+				bombs[i].classList.remove("bomb")
+			},1500)
+		}, Math.sqrt(i)*220)
+	}
 }
 
 function createButton(){
