@@ -4,8 +4,11 @@ body{
 	background: #cacaca;
 }
 .field{
+	--columns: 10;
+	--cell-size: 20px;
+	--font-size: 20px;
 	display: grid;
-	/* grid-gap: 4px;	*/
+	grid-template-columns: repeat(var(--columns), 1fr);
 	width: min-content;
 	margin: 10px auto;
 	
@@ -23,6 +26,8 @@ body{
 	align-items: center;
 	justify-content: center;
 	box-sizing: border-box;
+	width: var(--cell-size);
+	height: var(--cell-size);
 }
 .closed_cell{
 	background: #bdbdbd;

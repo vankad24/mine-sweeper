@@ -13,16 +13,15 @@ function createField(){
 	const font_size = cell_size*.7
 	field = document.createElement("div")
 	field.classList.add("field")
-	field.style.gridTemplateColumns = `repeat(${n}, 1fr)`
-	field.style.fontSize = `${font_size}px`
+	field.style.setProperty("--columns",n)
+	field.style.setProperty("--cell-size",cell_size+"px")
+	field.style.setProperty("--font-size",font_size+"px")
 	document.body.appendChild(field)
 	field.addEventListener("click", left_click)
 	field.addEventListener("contextmenu", right_click)
 	
 	for(let i=0; i < n*n; i++){
 		d = document.createElement("div")
-		d.style.width = `${cell_size}px`
-		d.style.height = `${cell_size}px`
 		d.classList.add("opened_cell")
 		field.appendChild(d)
 	}
