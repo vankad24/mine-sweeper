@@ -1,22 +1,21 @@
-const n = 12 //game field size
-const n_bombs = 10
-const field_width = .7
+let n = 12 //game field size
+let n_bombs = 10
+const field_width = .75
 const colors = ["#0000ff","#007b00","#ff0000","#00007b","#7b0000","#007b7b", "#000000", "#7b7b7b" ]
-let all_elements
+let all_elements = []
 let game_field = []
 let opened = 0
 let first_click = true
 
 function createField(){
-	const html = document.body.parentElement
+	const html = document.documentElement
 	const cell_size = Math.min(html.clientWidth,html.clientHeight)*field_width/n
 	const font_size = cell_size*.7
-	field = document.createElement("div")
-	field.classList.add("field")
+	field = document.querySelector(".field")
+	field.replaceChildren()
 	field.style.setProperty("--columns",n)
 	field.style.setProperty("--cell-size",cell_size+"px")
 	field.style.setProperty("--font-size",font_size+"px")
-	document.body.appendChild(field)
 	field.addEventListener("click", left_click)
 	field.addEventListener("contextmenu", right_click)
 	
@@ -174,22 +173,37 @@ function lose(){
 	}
 }
 
-function createButton(){
-	b = document.createElement("button")
-	b.classList.add("button_start")
-	b.innerText = "Начать"
-	document.body.appendChild(b)
-	b.addEventListener("click",e=>{
+function onSliderChange(e){
+	slider = e.target
+	const v = slider.value
+	const out = slider.nextElementSibling
+	out.textContent = v
+}
+
+function onFieldChange(e){
+	onSliderChange(e)
+	n = +e.target.value
+	createField()
+}
+function onBombsChange(e){
+	onSliderChange(e)
+	n_bombs = +e.target.value
+	createField()
+}
+
+
+function start(){
+	document.querySelector(".button_start").addEventListener("click",e=>{
 		playSound("start")
 		first_click = true
 		generateField()
 		clear_field()
 	})
-}
-
-function start(){
-	createButton()
 	createField()
+	const arr = document.querySelectorAll(".slider>input")
+	arr[0].addEventListener("input",onFieldChange)
+	arr[1].addEventListener("input",onBombsChange)
+	for (let el of arr)onSliderChange({"target":el})
 	// open_all()
 }
 
